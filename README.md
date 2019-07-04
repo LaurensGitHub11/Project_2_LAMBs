@@ -24,12 +24,11 @@ This goal of this project was to create a JavaScript based dashboard on Denver A
   * JS libraries used for plotting: D3.js, Plotly.js, Leaflet.js, ?
 
 
-#### Images from the final app
+#### Images from the final project
 ![part1.png]
 ![part2.png]
 
 
 #### References :
-https://www.denvergov.org/opendata/search?q=crime
-http://insideairbnb.com/get-the-data.html
+
 
