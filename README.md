@@ -28,12 +28,13 @@ https://denver-airbnb-crime-2019.herokuapp.com/
 
 
 #### Images from the final project
-![part1.png]
-![part2.png]
+![part1.png]()
+![part2.png]()
 
 
 #### References :
-http://insideairbnb.com/get-the-data.html
-https://www.denvergov.org/opendata/dataset/city-and-county-of-denver-crime
+[AirBNB References](http://insideairbnb.com/get-the-data.html)
+
+[Crime References](https://www.denvergov.org/opendata/dataset/city-and-county-of-denver-crime)
 
 
