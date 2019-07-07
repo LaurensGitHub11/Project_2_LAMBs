@@ -16,7 +16,7 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
   accessToken: API_KEY
 }).addTo(myMap);
 
-d3.json("../Resources/neighbourhoods.geojson", function(data) {
+d3.json("../../Resources/neighbourhoods.geojson", function(data) {
   // Creating a GeoJSON layer with the retrieved data
   var shapes = L.geoJson(data).addTo(myMap);
 
@@ -26,7 +26,7 @@ d3.json("../Resources/neighbourhoods.geojson", function(data) {
 
 
 // Load data from listings.csv
-d3.csv("../Resources/listings.csv", function(error, lData) {
+d3.csv("../../Resources/listings.csv", function(error, lData) {
     if (error) return console.warn(error);
 
     // save each column into an array variable
@@ -70,36 +70,6 @@ for (var i = 0; i < coords.length; i++) {
   }
 
 });
-
-// Load data from crime.csv
-d3.csv("../Resources/crime_2019.csv", function(error, cData) {
-    if (error) return console.warn(error);
-
-    // save each column into an array variable
-    var lats = cData.map(data => data.GEO_LAT);
-    // console.log("latitudes", lats);
-    var longs = cData.map(data => data.GEO_LON);
-    var offense = cData.map(data => data.OFFENSE_CATEGORY_ID);
-    var neigh = cData.map(data => data.NEIGHBORHOOD_ID);
-
-    // zip the lists of lats, londs, and features
-    var coords = lats.map(function(e, i, a) {return [e, longs[i]]});
-    var tools = coords.map(function(e, i, a) {return [coords, offense[i]]});
-    var tools2 = coords.map(function(e, i, a) {return [coords, neigh[i]]});
-
-    console.log("SECONDcoords", coords);
-
-    // create marker cluster group
-    var markers = L.markerClusterGroup();
-
-    for (var i = 0; i < coords.length; i++) {
-      markers.addLayer(L.marker(coords[i]).bindPopup(`<p style="line-height:2px">Neighborhood: ${tools2[i][1]}</p><p style="line-height:2px">Crime Category: ${tools[i][1]}</p>`));
-    };
-    markers.addTo(myMap);
-
-    L.control.layers({}, {'Crime Clusters': markers}).addTo(myMap);
-
-  });
 ///////////////////////////
 //end of map code (laurens_super_logic)
 ///////////////////////////
