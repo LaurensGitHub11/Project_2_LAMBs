@@ -16,7 +16,7 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
   accessToken: API_KEY
 }).addTo(myMap);
 
-d3.json("neighbourhoods.geojson", function(data) {
+d3.json("../Resources/neighbourhoods.geojson", function(data) {
   // Creating a GeoJSON layer with the retrieved data
   var shapes = L.geoJson(data).addTo(myMap);
 
@@ -26,7 +26,7 @@ d3.json("neighbourhoods.geojson", function(data) {
 
 
 // Load data from listings.csv
-d3.csv("listings.csv", function(error, lData) {
+d3.csv("../Resources/listings.csv", function(error, lData) {
     if (error) return console.warn(error);
 
     // save each column into an array variable
@@ -72,7 +72,7 @@ for (var i = 0; i < coords.length; i++) {
 });
 
 // Load data from crime.csv
-d3.csv("crime_2019.csv", function(error, cData) {
+d3.csv("../Resources/crime_2019.csv", function(error, cData) {
     if (error) return console.warn(error);
 
     // save each column into an array variable
