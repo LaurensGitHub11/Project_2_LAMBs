@@ -100,7 +100,6 @@ d3.csv("crime_2019.csv", function(error, cData) {
     L.control.layers({}, {'Crime Clusters': markers}).addTo(myMap);
 
   });
-
 ///////////////////////////
 //end of map code (laurens_super_logic)
 ///////////////////////////
