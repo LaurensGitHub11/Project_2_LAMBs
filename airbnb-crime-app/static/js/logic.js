@@ -11,7 +11,7 @@ var nodes = new vis.DataSet([
         label: 'Denver \n neighborhoods',
         color: '#33cccc',
         shape: 'circle',
-        font: { arial: 8, bold: true, color: 'white' }
+        font: { arial: 4, bold: true, color: 'white' }
     },
 ]);
 
@@ -177,12 +177,12 @@ function getNeighborhoodName() {
     })
 };
 
-var base_url = "/api/pie"
-getData(base_url + "City Park");
+var base_url = "/api/"
+getData(base_url + "Athmar Park");
 
 function getData(url) {
     d3.json(url, function (data) {
-        buildPiePlot(data);
+        buildPlot(data);
     })
 }
 
@@ -191,44 +191,44 @@ function optionChanged(neighborhood) {
     getData(url);
 };
 
-// function buildPlot(data) {
-//     var yearArray = [];
-//     var countArray = [];
-//     var parseYear = d3.timeParse("%Y");
+function buildPlot(data) {
+    var yearArray = [];
+    var countArray = [];
+    var parseYear = d3.timeParse("%Y");
 
-//     // fill each of the arrays with data
-//     for (var i = 0; i < data.length; i++) {
-//         yearArray.push(parseYear(data[i].year));
-//         countArray.push(data[i].count);
-//     }
+    // fill each of the arrays with data
+    for (var i = 0; i < data.length; i++) {
+        yearArray.push(parseYear(data[i].year));
+        countArray.push(data[i].count);
+    }
 
-//     // Create a trace object with the new arrays created
-//     var trace1 =
-//         {
-//             x: yearArray,
-//             y: countArray,
-//             type: 'scatter'
-//         };
-
-
-//     var layout = {
-//         title: "Trends in Landslide Occurances",
-//         xaxis: {
-//             title: "Year"
-//         },
-//         yaxis: {
-//             title: "Number of Landslide Occurances"
-//         }
-
-//     };
+    // Create a trace object with the new arrays created
+    var trace1 =
+        {
+            x: yearArray,
+            y: countArray,
+            type: 'scatter'
+        };
 
 
-//     // create a data array with the traces
-//     var data = [trace1]
+    var layout = {
+        title: "Number of Reviews across years",
+        xaxis: {
+            title: "Year"
+        },
+        yaxis: {
+            title: "Unique Neighborhoods recieving Reviews"
+        }
 
-//     Plotly.newPlot('timePlot', data, layout);
+    };
 
-// }
+
+    // create a data array with the traces
+    var data = [trace1]
+
+    Plotly.newPlot('timePlot', data, layout);
+
+}
 function init() {
     getNeighborhoodName();
 };
@@ -247,7 +247,7 @@ init();
 ///////////////////////////////
 
 var pieBaseURL = "/api/pie/"
-getPieData(pieBaseURL + "City Park");
+getPieData(pieBaseURL + "Athmar Park");
 
 function getPieData(pieURL) {
     d3.json(pieURL, function (pieData) {

@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 import numpy as np
+from datetime import datetime
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
@@ -168,22 +169,47 @@ def piechartdata(selectedneighborhood):
 #########################################################################
 # create a route that outputs review count by year for selected neighborhood
 #########################################################################
-@app.route("/api/line/<selectedneighborhood>")
+@app.route("/api/<selectedneighborhood>")
 def dataForPlotlyPlot(selectedneighborhood):
 
     # Use Pandas to perform the sql query to obtain the unique neighborhood names
-    stmt = session.query(Reviews).statement
-    df = pd.read_sql_query(stmt, session.bind)
-    df = df[df['countryname']!="NaN"]
+    result_reviews = db.session.query(Reviews.listing_id, Reviews.date).all()
+    result_listings = db.session.query(Listings.id,Listings.neighbourhood).all()
+    listing_id = []
+    date = []
+    id = []
+    neighbourhood = []
+
+    # loop thru results and append to list
+    for row in result_reviews:
+        listing_id.append(row[0])
+        date.append(row[1])
+
+    review_df = pd.DataFrame({
+       "id": listing_id,
+       "date": date,
+    })
+
+    for row in result_listings:
+        id.append(row[0])
+        neighbourhood.append(row[1])
+
+    listing_df = pd.DataFrame({
+        "id": id,
+        "neighborhood": neighbourhood,
+    })
+    
+    df = pd.merge(review_df,listing_df, on="id", how="inner")
+    df = df[df['neighborhood']!="NaN"]
     df = df[df['date']!="NaN"]
-    df['date'] = df['date'].apply(lambda x: datetime.strptime(x, "%m/%d/%Y"))
+    df['date'] = df['date'].apply(lambda x: datetime.strptime(x, "%m/%d/%y"))
     df['year'] = df['date'].dt.year
-    df = df.groupby(['countryname', 'year'])['id'].count().reset_index(level='year')
+    df = df.groupby(['neighborhood', 'year'])['id'].count().reset_index(level='year')
     df.columns= ['year','count']
-    df = df.loc[selectedcountry]
+    df = df.loc[selectedneighborhood]
     json_for_plotly = df.to_json(orient='records')
 
-    # Return a list of the unique country names
+    # Return a list of the unique Neighborhood names
     return json_for_plotly
 
 

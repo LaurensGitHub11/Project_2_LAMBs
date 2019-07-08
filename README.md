@@ -28,8 +28,8 @@ https://denver-airbnb-crime-2019.herokuapp.com/
 
 
 #### Images from the final project
-![part1.png]()
-![part2.png]()
+![final_project_1.png](images/final_project_1.png)
+![final_project_2.png](images/final_project_2.png)
 
 
 #### References :
