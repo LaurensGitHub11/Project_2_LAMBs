@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 import numpy as np
+import json
 from datetime import datetime
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
@@ -99,11 +100,21 @@ def network():
 
     return jsonify(final_dict)
 #########################################################################
-# end off code (Mona Arami)
+# create a route - load neighbourhoods.geojson
+#########################################################################
+@app.route("/api/geojson")
+def geo():
+    filename = os.path.join(app.static_folder, 'neighbourhoods.geojson')
+    with open(filename) as blog_file:
+        data = json.load(blog_file)
+    return jsonify(data)
+    
+#########################################################################
+# create json file from listing table
 #########################################################################
 
-@app.route("/api/leaflet/geojson")
-def leaflet_geojson():
+@app.route("/api/geojson/listings")
+def listing_geojson():
     sel = [Listings.latitude, Listings.longitude, Listings.neighbourhood, Listings.property_type, Listings.room_type, Listings.price, Listings.number_of_reviews, Listings.review_scores_rating]
 
     results = db.session.query(*sel).all()
@@ -117,7 +128,7 @@ def leaflet_geojson():
         listings_map["geometry"]["type"] = "Point"
         listings_map["geometry"]["coordinates"] = [result[0], result[1]]
         listings_map["properties"] = {}
-        listings_map["properties"]["neighbourhood"] = result[2]
+        listings_map["properties"]["neighborhood"] = result[2]
         listings_map["properties"]["property_type"] = result[3]
         listings_map["properties"]["room_type"] = result[4]
         listings_map["properties"]["price"] = result[5]
@@ -125,14 +136,34 @@ def leaflet_geojson():
         listings_map["properties"]["review_scores_rating"] = result[7]
         mylist.append(listings_map)
 
-    # crsdict = {}
-    # crsdict["type"] = "name"
-    # crsdict["properties"] = {}
-    # crsdict["properties"]["name"] = "urn:ogc:def:crs:OGC:1.3:CRS84"    
+   
+    listing_geojson = {"type": "FeatureCollection", "features": mylist }
     
-    geojson = {"type": "FeatureCollection", "features": mylist }
+    return jsonify(listing_geojson)
+########################################################################
+# create json file from crime table
+#########################################################################
+
+@app.route("/api/geojson/crime")
+def crime_geojson():
+    sel = [Crime.GEO_LAT, Crime.GEO_LON, Crime.NEIGHBORHOOD_ID]
+    results = db.session.query(*sel).all()
+
+    mylist_crime = []
+
+    for result in results:
+        crime_map = {}
+        crime_map["type"] = "Feature"
+        crime_map["geometry"] = {}
+        crime_map["geometry"]["type"] = "Point"
+        crime_map["geometry"]["coordinates"] = [result[0], result[1]]
+        crime_map["properties"] = {}
+        crime_map["properties"]["neighborhood"] = result[2]
+        mylist_crime.append(crime_map)
+        
+    crime_geojson = {"type": "FeatureCollection", "features": mylist_crime }
     
-    return jsonify(geojson)
+    return jsonify(crime_geojson)
 
 #################################################
 # create a route that outputs unique neighborhood names

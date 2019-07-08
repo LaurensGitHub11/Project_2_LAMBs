@@ -73,11 +73,14 @@ var network = new vis.Network(container, data, options);
 ///////////////////////////
 
 // Store our API endpoint inside queryUrl
-var queryUrl = "/api/leaflet/geojson";
+var GeojsonUrl = "/api/geojson";
+var ListingUrl = "/api/geojson/listings";
+var CrimeUrl = "/api/geojson/crime";
+
 var API_KEY = "pk.eyJ1IjoibGhpbGluc2tpIiwiYSI6ImNqeDNtdmxiczAwcXAzeXJ1ZG5xOGN1b2UifQ.uij4FrWeAslHU7mk7UJnfw";
 
-// perform an API call to the Citi Bike API to get station information. Call createMarkers when complete
-d3.json(queryUrl, createMarkers);
+
+d3.json(ListingUrl, createMarkers);
 
 function createMarkers(response) {
 
@@ -95,24 +98,20 @@ function createMarkers(response) {
         var marker = new L.CircleMarker([coordinate[0], coordinate[1]], {
             color: "purple",
             radius: 4,
-            weight: 0,
-            opacity: 0.5
+            weight : 0,
+            opacity:0.5
         })
 
         // add the marker to the markers array
         markers.push(marker);
     }
+
     // create a layer group made from the markers array, pass it into the createMap function
     createMap(L.layerGroup(markers));
 
-
 }
 
-
 function createMap(markers) {
-
-    // create the tile layer that will be the background of our map
-
     var streetmap = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18,
@@ -133,16 +132,17 @@ function createMap(markers) {
         "Satellite": satellite
     };
 
-
+    var listingMarkers = new L.LayerGroup();
     // create an overlayMaps object to hold the bikeStations layer
     var overlayMaps = {
         "AirBNB": markers
+        // "Crime":CMarkers
     };
 
     // Create the map object with options
     var geoMap = L.map("map", {
         center: [39.7392, -104.9903],
-        zoom: 13,
+        zoom: 11,
         preferCanvas: true,
         layers: [streetmap, markers]
     });
@@ -151,7 +151,22 @@ function createMap(markers) {
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
     }).addTo(geoMap);
+
+    d3.json(GeojsonUrl, function(data) {
+        // Creating a GeoJSON layer with the retrieved data
+        L.geoJson(data,{
+            color: "gold",
+            opacity: 0.5
+        }).addTo(geoMap);
+    });   
+    // d3.json(CrimeUrl, function(CrimeData) {
+    //     // Creating a GeoJSON layer with the retrieved data
+    //     L.geoJson(CrimeData).addTo(geoMap);
+    // });  
+
+
 }
+
 
  ///////////////////////////////
 // javascript for plotly-lie //
