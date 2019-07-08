@@ -1,129 +1,24 @@
-///////////////////////////
-// javascript for map(laurens_super_logic)
-///////////////////////////
-// const API_KEY = "pk.eyJ1IjoibGhpbGluc2tpIiwiYSI6ImNqeDNtdmxiczAwcXAzeXJ1ZG5xOGN1b2UifQ.uij4FrWeAslHU7mk7UJnfw";
-
-// // Create an initial map object
-// // Set the longitude, latitude, and the starting zoom level
-// var myMap = L.map("map").setView([39.7392, -104.9903], 13);
-
-// // Add a tile layer (the background map image) to our map
-// // Use the addTo method to add objects to our map
-// L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
-//   attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-//   maxZoom: 18,
-//   id: "mapbox.streets",
-//   accessToken: API_KEY
-// }).addTo(myMap);
-
-// d3.json("neighbourhoods.geojson", function(data) {
-//   // Creating a GeoJSON layer with the retrieved data
-//   var shapes = L.geoJson(data).addTo(myMap);
-
-//   L.control.layers({}, {'Neighborhoods': shapes}).addTo(myMap);
-
-// });
-
-
-// // Load data from listings.csv
-//     var queryUrl = "/api/leaflet/geojson";
-
-// // // perform an API call to the Citi Bike API to get station information. Call createMarkers when complete
-//     d3.json(queryUrl, createMarkers);
-//     // save each column into an array variable
-//     var lats = lData.map(data => data.latitude);
-//     // console.log("latitudes", lats);
-//     var longs = lData.map(data => data.longitude);
-//     var neighborhood = lData.map(data => data.neighbourhood);
-//     var property_type = lData.map(data => data.property_type);
-//     var room_type = lData.map(data => data.room_type);
-//     var price = lData.map(data => data.price);
-//     var num_reviews = lData.map(data => data.number_of_reviews);
-//     var review_score = lData.map(data => data.review_scores_rating);
-
-//     // zip each column list with the list of coords for alignment
-//     var coords = lats.map(function(e, i, a) {return [e, longs[i]]});
-//     var tools = coords.map(function(e, i, a) {return [coords, neighborhood[i]]});
-//     var tools2 = coords.map(function(e, i, a) {return [coords, property_type[i]]});
-//     var tools3 = coords.map(function(e, i, a) {return [coords, room_type[i]]});
-//     var tools4 = coords.map(function(e, i, a) {return [coords, price[i]]});
-//     var tools5 = coords.map(function(e, i, a) {return [coords, num_reviews[i]]});
-//     var tools6 = coords.map(function(e, i, a) {return [coords, review_score[i]]});
-
-//     console.log("coords", coords);
-//     // console.log("tools", tools);
-
-// //  lData.forEach(function(data) {
-// //      console.log("Latitude:", data.latitude);
-// //   });
-
-// // Create a new marker
-// // L.marker(coords).addTo(myMap);
-
-// // Loop through the coords array and create one marker for each airbnb coordinate object
-// for (var i = 0; i < coords.length; i++) {
-//     L.circleMarker(coords[i], {
-//       stroke: false,
-//       fillOpacity: 0.75,
-//       fillColor: "purple",
-//       radius: 4,
-//     }).bindPopup(`<h3>${tools2[i][1]}: ${tools3[i][1]}</h3><p style="line-height:2px">Neighborhood: ${tools[i][1]}</p><p style="line-height:2px">Price: ${tools4[i][1]}</p><p style="line-height:2px">Rating: ${tools6[i][1]}</p><p style="line-height:2px">Number of Reviews: ${tools5[i][1]}</p>`).addTo(myMap);
-//   }
-
-// });
-
-// // Load data from crime.csv
-// d3.csv("crime_2019.csv", function(error, cData) {
-//     if (error) return console.warn(error);
-
-//     // save each column into an array variable
-//     var lats = cData.map(data => data.GEO_LAT);
-//     // console.log("latitudes", lats);
-//     var longs = cData.map(data => data.GEO_LON);
-//     var offense = cData.map(data => data.OFFENSE_CATEGORY_ID);
-//     var neigh = cData.map(data => data.NEIGHBORHOOD_ID);
-
-//     // zip the lists of lats, londs, and features
-//     var coords = lats.map(function(e, i, a) {return [e, longs[i]]});
-//     var tools = coords.map(function(e, i, a) {return [coords, offense[i]]});
-//     var tools2 = coords.map(function(e, i, a) {return [coords, neigh[i]]});
-
-//     console.log("SECONDcoords", coords);
-
-//     // create marker cluster group
-//     var markers = L.markerClusterGroup();
-
-//     for (var i = 0; i < coords.length; i++) {
-//       markers.addLayer(L.marker(coords[i]).bindPopup(`<p style="line-height:2px">Neighborhood: ${tools2[i][1]}</p><p style="line-height:2px">Crime Category: ${tools[i][1]}</p>`));
-//     };
-//     markers.addTo(myMap);
-
-//     L.control.layers({}, {'Crime Clusters': markers}).addTo(myMap);
-
-//   });
-///////////////////////////
-//end of map code (laurens_super_logic)
-///////////////////////////
-
 
 ///////////////////////////
-// javascript for network visualization (Mona Arami)
+// javascript for network visualization
 ///////////////////////////
 
 // create an array with nodes
 var nodes = new vis.DataSet([
     // inner circle node
-    { id: 100, 
-      label: 'Denver \n neighborhoods', 
-      color: '#33cccc', 
-      shape: 'circle', 
-      font: { arial : 8, bold: true, color: 'white'} },
+    {
+        id: 100,
+        label: 'Denver \n neighborhoods',
+        color: '#33cccc',
+        shape: 'circle',
+        font: { arial: 8, bold: true, color: 'white' }
+    },
 ]);
 
 var edges = new vis.DataSet([
     // edges for 
     { from: 100, to: 1 },
-    
+
 ]);
 
 var vis_link = "/api/network_viz"
@@ -134,13 +29,13 @@ d3.json(vis_link, function (error, data) {
 
     data.forEach(function (value, index) {
         nodes.add({
-            id: (index + 1), 
-            size: (Math.sqrt((30 + value.total_crime))), 
-            label: value.neighborhood, 
-            color:'#ff9933',
-            shape: 'dot', 
+            id: (index + 1),
+            size: (Math.sqrt((30 + value.total_crime))),
+            label: value.neighborhood,
+            color: '#ff9933',
+            shape: 'dot',
             title: `Total Crime in this Neighborhood:${value.total_crime},
-            AirBNB Average Price in this Neighborhood:$${value.average_price}`                    
+            AirBNB Average Price in this Neighborhood:$${value.average_price}`
         })
     })
 })
@@ -150,9 +45,9 @@ d3.json(vis_link, function (error, data) {
     if (error) throw error;
 
     data.forEach(function (value, index) {
-            edges.add({
-                from: 100, to: (index + 2)
-            })
+        edges.add({
+            from: 100, to: (index + 2)
+        })
     })
 });
 
@@ -170,7 +65,7 @@ var options = {};
 // initialize your network!
 var network = new vis.Network(container, data, options);
 ///////////////////////////
-// end of code (Mona Arami)
+// end of code 
 ///////////////////////////
 
 ///////////////////////////
@@ -200,8 +95,8 @@ function createMarkers(response) {
         var marker = new L.CircleMarker([coordinate[0], coordinate[1]], {
             color: "purple",
             radius: 4,
-            weight : 0,
-            opacity:0.5
+            weight: 0,
+            opacity: 0.5
         })
 
         // add the marker to the markers array
@@ -209,7 +104,7 @@ function createMarkers(response) {
     }
     // create a layer group made from the markers array, pass it into the createMap function
     createMap(L.layerGroup(markers));
-    
+
 
 }
 
@@ -217,7 +112,6 @@ function createMarkers(response) {
 function createMap(markers) {
 
     // create the tile layer that will be the background of our map
-    // var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYXNlbGExOTgyIiwiYSI6ImNqZDNocXRlNTBoMWEyeXFmdWY1NnB2MmIifQ.ziEOjgHun64EAp4W3LlsQg");
 
     var streetmap = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
@@ -236,13 +130,13 @@ function createMap(markers) {
     // define a baselayer object to hold our base layer objects
     var baseMaps = {
         "Street Map": streetmap,
-        "Satellite": satellite 
+        "Satellite": satellite
     };
 
 
     // create an overlayMaps object to hold the bikeStations layer
     var overlayMaps = {
-        "AirBNB": markers 
+        "AirBNB": markers
     };
 
     // Create the map object with options
@@ -252,13 +146,151 @@ function createMap(markers) {
         preferCanvas: true,
         layers: [streetmap, markers]
     });
-  
+
     // create a layer control, pass in the baseMaps and overlayMaps. Add the layer control to the map
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
     }).addTo(geoMap);
-
-    
-
-    
 }
+
+ ///////////////////////////////
+// javascript for plotly-lie //
+///////////////////////////////
+
+// populate neighborhood names
+function getNeighborhoodName() {
+
+    // Grab a reference to the dropdown select element
+    var selector = document.getElementById("selDataset");
+
+    // Use the list of sample names to populate the select options
+    d3.json("/api/neighborhoodnames", function (error, neighborhoodNames) {
+
+        neighborhoodNames.sort();
+
+        for (var i = 0; i < neighborhoodNames.length; i++) {
+            var currentOption = document.createElement('option')
+            currentOption.text = neighborhoodNames[i]
+            currentOption.value = neighborhoodNames[i]
+            selector.appendChild(currentOption);
+        }
+    })
+};
+
+var base_url = "/api/pie"
+getData(base_url + "City Park");
+
+function getData(url) {
+    d3.json(url, function (data) {
+        buildPiePlot(data);
+    })
+}
+
+function optionChanged(neighborhood) {
+    var url = base_url + neighborhood;
+    getData(url);
+};
+
+// function buildPlot(data) {
+//     var yearArray = [];
+//     var countArray = [];
+//     var parseYear = d3.timeParse("%Y");
+
+//     // fill each of the arrays with data
+//     for (var i = 0; i < data.length; i++) {
+//         yearArray.push(parseYear(data[i].year));
+//         countArray.push(data[i].count);
+//     }
+
+//     // Create a trace object with the new arrays created
+//     var trace1 =
+//         {
+//             x: yearArray,
+//             y: countArray,
+//             type: 'scatter'
+//         };
+
+
+//     var layout = {
+//         title: "Trends in Landslide Occurances",
+//         xaxis: {
+//             title: "Year"
+//         },
+//         yaxis: {
+//             title: "Number of Landslide Occurances"
+//         }
+
+//     };
+
+
+//     // create a data array with the traces
+//     var data = [trace1]
+
+//     Plotly.newPlot('timePlot', data, layout);
+
+// }
+function init() {
+    getNeighborhoodName();
+};
+
+
+
+// Initialize the dashboard
+init();
+
+
+
+
+
+///////////////////////////////
+// javascript for plotly-pie //
+///////////////////////////////
+
+var pieBaseURL = "/api/pie/"
+getPieData(pieBaseURL + "City Park");
+
+function getPieData(pieURL) {
+    d3.json(pieURL, function (pieData) {
+        buildPiePlot(pieData);
+    })
+}
+function optionChanged(neighborhood) {
+    var url = base_url + neighborhood;
+    var newPieURL = pieBaseURL + neighborhood;
+    getData(url);
+    getPieData(newPieURL);
+};
+
+function buildPiePlot(pieData) {
+
+    // Build pie chart
+    var pieValues = [];
+    var pieLabels = [];
+
+    // Fill each of the arrays with data
+    for (var i = 0; i < pieData.length; i++) {
+        pieValues.push(pieData[i].count);
+        pieLabels.push(pieData[i].room_type);
+    }
+    // Build Pie Chart
+    var data = [{
+        values: pieValues,
+        labels: pieLabels,
+        type: 'pie'
+    }];
+
+    var layout = {
+        title: "Listing Breakdown by Room Type"
+    }
+
+    var PIE = document.getElementById('pie');
+    Plotly.newPlot(PIE, data, layout);
+};
+
+
+
+
+
+
+
+

@@ -132,6 +132,38 @@ def leaflet_geojson():
     
     return jsonify(geojson)
 
+#################################################
+# create a route that outputs unique neighborhood names
+#################################################
+@app.route("/api/neighborhoodnames")
+def getNeighborhoodNames():
+
+    # Use Pandas to perform the sql query to obtain the unique neighborhood names
+    stmt = db.session.query(Listings).statement
+    df = pd.read_sql_query(stmt, db.session.bind)
+    df = df[df['neighbourhood']!="NaN"]
+    neighborhoodList = list(df['neighbourhood'].unique())
+
+    # Return a list of the unique country names
+    return jsonify(neighborhoodList)
+    
+#########################################################################
+# create a route -  pie
+#########################################################################
+@app.route("/api/pie/<selectedneighborhood>")
+def piechartdata(selectedneighborhood):
+    # Use Pandas to perform the sql query to obtain the unique Neighborhood names
+    stmt = db.session.query(Listings).statement
+    df = pd.read_sql_query(stmt, db.session.bind)
+    df = df[df['neighbourhood']!="NaN"]
+    df = df[df['room_type']!="NaN"]
+    df = df.groupby(['neighbourhood', 'room_type'])['id'].count().reset_index(level='room_type')
+    df.columns = ['room_type','count']
+    df = df.loc[selectedneighborhood]
+    room_type_json = df.to_json(orient='records')
+   
+    return room_type_json
+
 
 
 if __name__ == "__main__":
