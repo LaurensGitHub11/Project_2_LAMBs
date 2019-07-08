@@ -108,7 +108,7 @@ d3.json(vis_link, function (error, data) {
             label: value.neighborhood, 
             color:'#ff9933',
             shape: 'dot', 
-            title: `Total Crime in this Neighborhood:${value.total_crime}\
+            title: `Total Crime in this Neighborhood:${value.total_crime},
             AirBNB Average Price in this Neighborhood:$${value.average_price}`                    
         })
     })

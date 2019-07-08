@@ -31,8 +31,8 @@ Base = automap_base()
 # reflect the tables
 Base.prepare(db.engine, reflect=True)
 
-
-
+Crime = Base.classes.crime
+Listings = Base.classes.listings
 #################################################
 # Create a route that renders index.html template
 #################################################
@@ -46,10 +46,7 @@ def home():
 #########################################################################
 @app.route("/api/network_viz")
 def network():
-    Crime = Base.classes.crime
-    Listings = Base.classes.listings
 
-    # session = Session(engine)
     result_crime = db.session.query(Crime.OFFENSE_CATEGORY_ID,Crime.NEIGHBORHOOD_ID).all()
     result_listings = db.session.query(Listings.price,Listings.neighbourhood).all()
 
@@ -102,6 +99,39 @@ def network():
 #########################################################################
 # end off code (Mona Arami)
 #########################################################################
+
+@app.route("/api/leaflet/geojson")
+def leaflet_geojson():
+    sel = [Listings.latitude, Listings.longitude, Listings.neighbourhood, Listings.property_type, Listings.room_type, Listings.price, Listings.number_of_reviews, Listings.review_scores_rating]
+
+    results = db.session.query(*sel).all()
+
+    mylist = []
+
+    for result in results:
+        listings_map = {}
+        listings_map["type"] = "Feature"
+        listings_map["geometry"] = {}
+        listings_map["geometry"]["type"] = "Point"
+        listings_map["geometry"]["coordinates"] = [result[0], result[1]]
+        listings_map["properties"] = {}
+        listings_map["properties"]["neighbourhood"] = result[2]
+        listings_map["properties"]["property_type"] = result[3]
+        listings_map["properties"]["room_type"] = result[4]
+        listings_map["properties"]["price"] = result[5]
+        listings_map["properties"]["number_of_reviews"] = result[6]
+        listings_map["properties"]["review_scores_rating"] = result[7]
+        mylist.append(listings_map)
+
+    # crsdict = {}
+    # crsdict["type"] = "name"
+    # crsdict["properties"] = {}
+    # crsdict["properties"]["name"] = "urn:ogc:def:crs:OGC:1.3:CRS84"    
+    
+    geojson = {"type": "FeatureCollection", "features": mylist }
+    
+    return jsonify(geojson)
+
 
 
 if __name__ == "__main__":
