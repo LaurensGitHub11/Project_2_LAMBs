@@ -270,7 +270,7 @@ function buildPiePlot(pieData) {
     // Fill each of the arrays with data
     for (var i = 0; i < pieData.length; i++) {
         pieValues.push(pieData[i].count);
-        pieLabels.push(pieData[i].room_type);
+        pieLabels.push(pieData[i].property_type);
     }
     // Build Pie Chart
     var data = [{

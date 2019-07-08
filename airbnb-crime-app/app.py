@@ -33,6 +33,7 @@ Base.prepare(db.engine, reflect=True)
 
 Crime = Base.classes.crime
 Listings = Base.classes.listings
+Reviews = Base.classes.reviews
 #################################################
 # Create a route that renders index.html template
 #################################################
@@ -156,13 +157,34 @@ def piechartdata(selectedneighborhood):
     stmt = db.session.query(Listings).statement
     df = pd.read_sql_query(stmt, db.session.bind)
     df = df[df['neighbourhood']!="NaN"]
-    df = df[df['room_type']!="NaN"]
-    df = df.groupby(['neighbourhood', 'room_type'])['id'].count().reset_index(level='room_type')
-    df.columns = ['room_type','count']
+    df = df[df['property_type']!="NaN"]
+    df = df.groupby(['neighbourhood', 'property_type'])['id'].count().reset_index(level='property_type')
+    df.columns = ['property_type','count']
     df = df.loc[selectedneighborhood]
     room_type_json = df.to_json(orient='records')
    
     return room_type_json
+
+#########################################################################
+# create a route that outputs review count by year for selected neighborhood
+#########################################################################
+@app.route("/api/line/<selectedneighborhood>")
+def dataForPlotlyPlot(selectedneighborhood):
+
+    # Use Pandas to perform the sql query to obtain the unique neighborhood names
+    stmt = session.query(Reviews).statement
+    df = pd.read_sql_query(stmt, session.bind)
+    df = df[df['countryname']!="NaN"]
+    df = df[df['date']!="NaN"]
+    df['date'] = df['date'].apply(lambda x: datetime.strptime(x, "%m/%d/%Y"))
+    df['year'] = df['date'].dt.year
+    df = df.groupby(['countryname', 'year'])['id'].count().reset_index(level='year')
+    df.columns= ['year','count']
+    df = df.loc[selectedcountry]
+    json_for_plotly = df.to_json(orient='records')
+
+    # Return a list of the unique country names
+    return json_for_plotly
 
 
 
