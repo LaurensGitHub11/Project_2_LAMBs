@@ -82,18 +82,21 @@ var API_KEY = "pk.eyJ1IjoibGhpbGluc2tpIiwiYSI6ImNqeDNtdmxiczAwcXAzeXJ1ZG5xOGN1b2
 
 d3.json(ListingUrl, createMarkers);
 
-function createMarkers(response) {
+    function createMarkers(response) {
 
     // pull the "features" property off of the response
     var features = response.features;
-
+    var clusters = L.markerClusterGroup();
     // initialize an array to hold markers
     var markers = [];
 
     // loop through the features array
     for (var index = 0; index < features.length; index++) {
         var coordinate = features[index].geometry.coordinates
-
+        if(coordinate){
+            clusters.addLayer(L.marker([coordinate[0], coordinate[1]])
+            .bindPopup(features[index].descriptor));
+        }
         // for each station, create a marker and bind a popup with the station's name
         var marker = new L.CircleMarker([coordinate[0], coordinate[1]], {
             color: "purple",
@@ -105,10 +108,12 @@ function createMarkers(response) {
         // add the marker to the markers array
         markers.push(marker);
     }
-
+    
     // create a layer group made from the markers array, pass it into the createMap function
     createMap(L.layerGroup(markers));
+    createMap(L.layerGroup(clusters));
 
+    // geoMap.addLayer(clusters); 
 }
 
 function createMap(markers) {
@@ -132,11 +137,11 @@ function createMap(markers) {
         "Satellite": satellite
     };
 
-    var listingMarkers = new L.LayerGroup();
+    var clusters = new L.LayerGroup();
     // create an overlayMaps object to hold the bikeStations layer
     var overlayMaps = {
-        "AirBNB": markers
-        // "Crime":CMarkers
+        "AirBNB": markers,
+        "Clusters": clusters
     };
 
     // Create the map object with options
@@ -146,7 +151,7 @@ function createMap(markers) {
         preferCanvas: true,
         layers: [streetmap, markers]
     });
-
+    // geoMap.addLayer(clusters); 
     // create a layer control, pass in the baseMaps and overlayMaps. Add the layer control to the map
     L.control.layers(baseMaps, overlayMaps, {
         collapsed: false
@@ -158,7 +163,8 @@ function createMap(markers) {
             color: "gold",
             opacity: 0.5
         }).addTo(geoMap);
-    });   
+    });  
+    
     // d3.json(CrimeUrl, function(CrimeData) {
     //     // Creating a GeoJSON layer with the retrieved data
     //     L.geoJson(CrimeData).addTo(geoMap);
